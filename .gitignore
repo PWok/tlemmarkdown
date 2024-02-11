@@ -1,3 +1,8 @@
+# build and testing
+
+build/
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -45,16 +50,12 @@ ipython_config.py
 #   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
 #poetry.lock
 
-
-
 .venv
 
 # mypy
 .mypy_cache/
 .dmypy.json
 dmypy.json
-
-
 
 # Cython debug symbols
 cython_debug/
