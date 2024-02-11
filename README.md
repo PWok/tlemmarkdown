@@ -1,5 +1,7 @@
 # Markdown formatter for use by The League of Extraordinary Minds
+(and an excuse for me to learn [poetry](https://python-poetry.org) )
 
+-------
 
 ## Instalation
 Download the repository. If you have poetry installed use `poetry init`. Alternatively you can use `pip install .`
