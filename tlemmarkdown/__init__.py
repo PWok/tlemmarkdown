@@ -10,20 +10,19 @@ def main(source, output, *, source_encoding, output_encoding):
         if source is None:
             html = input()
         else:
+            exts = [
+                extensions.TlemFence(),
+                extensions.TlemUnderline(),
+                extensions.TlemDel(),
+                extensions.TlemTask(),
+                SmartyExtension(smart_ellipses=False, smart_quotes=False),
+                "sane_lists",
+                "nl2br",
+                "tables",
+            ]
             with open(source, "r", encoding=source_encoding) as f:
                 # html = markdown.markdown(f.read())
-                html = markdown.markdown(
-                    f.read(),
-                    extensions=[
-                        extensions.TlemFence(),
-                        extensions.TlemUnderline(),
-                        extensions.TlemDel(),
-                        SmartyExtension(smart_ellipses=False, smart_quotes=False),
-                        "sane_lists",
-                        "nl2br",
-                        "tables",
-                    ],
-                )
+                html = markdown.markdown(f.read(), extensions=exts)
 
         if output is None:
             print(html)

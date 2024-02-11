@@ -1,5 +1,5 @@
 """
-    Markdown Preprocessor
+    Markdown Preprocessor code fence
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     Adapted from 
@@ -51,7 +51,7 @@ class TlemCodeFencePreprocessor(Preprocessor):
         wrapcode=False,
     )
 
-    code_tag_data = '''style="background:#141414;border:1px solid #ccc;color:#E9F8F8;font-family:monospace;font-size:11px;padding:5px 10px;"'''
+    style_data = '''style="background:#141414;border:1px solid #ccc;color:#E9F8F8;font-family:monospace;font-size:11px;padding:5px 10px;"'''
 
     def __init__(self, md: markdown.Markdown):
         super().__init__(md)
@@ -68,7 +68,7 @@ class TlemCodeFencePreprocessor(Preprocessor):
                     lexer = TextLexer()
                 code = highlight(m.group("code"), lexer, self.formatter)
                 code = code.replace("\n\n", "\n&nbsp;\n").replace("\n", "<br />")
-                code = f'\n\n<div {self.code_tag_data} class="code">{code}</div>\n\n'
+                code = f'\n\n<div {self.style_data} class="code">{code}</div>\n\n'
                 placeholder = self.md.htmlStash.store(code)
                 text = f'{text[:m.start()]}\n{placeholder}\n{text[m.end():]}'
             else:
