@@ -2,8 +2,10 @@
     Markdown Preprocessor
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Adapted from: 
+    Adapted from 
     https://github.com/pygments/pygments/blob/master/external/markdown-processor.py
+    and
+    https://github.com/Python-Markdown/markdown/blob/master/markdown/extensions/fenced_code.py
     
 """
 
@@ -18,7 +20,7 @@ from markdown.extensions import Extension
 import pygments
 from pygments import highlight
 from pygments.formatters import HtmlFormatter  # pylint: disable=E0611
-from pygments.lexers import get_lexer_by_name, Python3Lexer  # pylint: disable=E0611
+from pygments.lexers import get_lexer_by_name, TextLexer  # pylint: disable=E0611
 from pygments.styles import get_style_by_name
 
 
@@ -29,7 +31,7 @@ from pygments.styles import get_style_by_name
 INLINESTYLES = True
 
 
-class CodeBlockPreprocessor(Preprocessor):
+class TlemCodeFencePreprocessor(Preprocessor):
 
     PATTERN = re.compile(
         dedent(r'''
@@ -63,7 +65,7 @@ class CodeBlockPreprocessor(Preprocessor):
                 try:
                     lexer = get_lexer_by_name(m.group("lang"))
                 except pygments.util.ClassNotFound:
-                    lexer = Python3Lexer()
+                    lexer = TextLexer()
                 code = highlight(m.group("code"), lexer, self.formatter)
                 code = code.replace("\n\n", "\n&nbsp;\n").replace("\n", "<br />")
                 code = f'\n\n<div {self.code_tag_data} class="code">{code}</div>\n\n'
@@ -75,7 +77,6 @@ class CodeBlockPreprocessor(Preprocessor):
         return text.split("\n")
 
 
-class CodeBlockExtension(Extension):
+class TlemCodeFenceExtension(Extension):
     def extendMarkdown(self, md):
-        md.registerExtension(self)
-        md.preprocessors.register(CodeBlockPreprocessor(md), "CodeBlockPreprocessor", 25)
+        md.preprocessors.register(TlemCodeFencePreprocessor(md), "TlemCodeFencePreprocessor", 25)

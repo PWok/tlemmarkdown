@@ -1,7 +1,8 @@
 import sys
 import markdown
+from markdown.extensions.smarty import SmartyExtension
 
-from .extensions import CodeBlockExtension
+from . import extensions
 
 
 def main(source, output, *, source_encoding, output_encoding):
@@ -11,7 +12,18 @@ def main(source, output, *, source_encoding, output_encoding):
         else:
             with open(source, "r", encoding=source_encoding) as f:
                 # html = markdown.markdown(f.read())
-                html = markdown.markdown(f.read(), extensions=[CodeBlockExtension()])
+                html = markdown.markdown(
+                    f.read(),
+                    extensions=[
+                        extensions.TlemFence(),
+                        extensions.TlemUnderline(),
+                        extensions.TlemDel(),
+                        SmartyExtension(smart_ellipses=False, smart_quotes=False),
+                        "sane_lists",
+                        "nl2br",
+                        "tables",
+                    ],
+                )
 
         if output is None:
             print(html)
