@@ -1,9 +1,10 @@
 import sys
 import markdown
-from .mdpreprocessor import CodeBlockExtension
+
+from .extensions import CodeBlockExtension
 
 
-def main(source, output, * ,source_encoding, output_encoding):
+def main(source, output, *, source_encoding, output_encoding):
     try:
         if source is None:
             html = input()
