@@ -15,6 +15,7 @@ def main(source, output, *, source_encoding, output_encoding):
                 extensions.TlemUnderline(),
                 extensions.TlemDel(),
                 extensions.TlemTask(),
+                extensions.TlemInfo(),
                 SmartyExtension(smart_ellipses=False, smart_quotes=False),
                 "sane_lists",
                 "nl2br",
