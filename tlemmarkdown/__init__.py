@@ -5,13 +5,13 @@ from markdown.extensions.smarty import SmartyExtension
 from . import extensions
 
 
-def main(source, output, *, source_encoding, output_encoding):
+def main(source, output, *, source_encoding, output_encoding, code_style="monokai"):
     try:
         if source is None:
             html = input()
         else:
             exts = [
-                extensions.TlemFence(),
+                extensions.TlemFence(code_style),
                 extensions.TlemUnderline(),
                 extensions.TlemDel(),
                 extensions.TlemTask(),

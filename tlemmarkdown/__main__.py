@@ -15,19 +15,29 @@ parser.add_argument(
     help="The markdown file. Stdin by default",
 )
 parser.add_argument(
-    "--source-encoding",
-    dest="source_encoding",
-    type=str,
-    default="UTF-8",
-    help="The text encoding of the source file.",
-)
-parser.add_argument(
     "-o",
     "--output",
     dest="output",
     type=str,
     default=None,
     help="The resulting html file. Stdout by default.",
+)
+parser.add_argument(
+    "-c",
+    "--code-style",
+    dest="code_style",
+    type=str,
+    default="monokai",
+    help="""Optional code style name. Can be any style supported by Pygments
+            Defaults to monokai. It should be noted that the background is overwritten.
+            By default the `C++ code` black (hex #141414) background, causing some styles to be unreadble""",
+)
+parser.add_argument(
+    "--source-encoding",
+    dest="source_encoding",
+    type=str,
+    default="UTF-8",
+    help="The text encoding of the source file.",
 )
 parser.add_argument(
     "--output-encoding",
@@ -37,6 +47,7 @@ parser.add_argument(
     help="The text encoding of the output file.",
 )
 
+
 args = parser.parse_args()
 sys.exit(
     main(
@@ -44,5 +55,6 @@ sys.exit(
         args.output,
         source_encoding=args.source_encoding,
         output_encoding=args.output_encoding,
+        code_style=args.code_style,
     )
 )

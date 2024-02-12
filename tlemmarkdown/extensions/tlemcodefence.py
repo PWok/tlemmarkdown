@@ -21,7 +21,7 @@ import pygments
 from pygments import highlight
 from pygments.formatters import HtmlFormatter  # pylint: disable=E0611
 from pygments.lexers import get_lexer_by_name, TextLexer  # pylint: disable=E0611
-from pygments.styles import get_style_by_name
+from pygments.style import Style
 
 
 # Options
@@ -34,26 +34,29 @@ INLINESTYLES = True
 class TlemCodeFencePreprocessor(Preprocessor):
 
     PATTERN = re.compile(
-        dedent(r'''
+        dedent(
+            r"""
             (?P<fence>^(?:~{3,}|`{3,}))[ ]*                          # opening fence
             (\.?(?P<lang>[\w\d#.+-]*)[ ]*)?                          # optional (.)lang
             \n                                                       # newline (end of opening fence)
             (?P<code>.*?)(?<=\n)                                     # the code block
             (?P=fence)[ ]*$                                          # closing fence
-        '''),
-        re.MULTILINE | re.DOTALL | re.VERBOSE
-    )
-
-    formatter = HtmlFormatter(
-        nowrap=True,
-        noclasses=INLINESTYLES,
-        style=get_style_by_name("monokai"),
-        wrapcode=False,
+        """
+        ),
+        re.MULTILINE | re.DOTALL | re.VERBOSE,
     )
 
     style_data = '''style="background:#141414;border:1px solid #ccc;color:#E9F8F8;font-family:monospace;font-size:11px;padding:5px 10px;"'''
 
-    def __init__(self, md: markdown.Markdown):
+    def __init__(self, md: markdown.Markdown, code_style: str | type[Style] = "monokai"):
+        if code_style is None:
+            code_style = "monokai"
+        self.formatter = HtmlFormatter(
+            nowrap=True,
+            noclasses=INLINESTYLES,
+            style=code_style,
+            wrapcode=False,
+        )
         super().__init__(md)
 
     def run(self, lines):
@@ -70,7 +73,7 @@ class TlemCodeFencePreprocessor(Preprocessor):
                 code = code.replace("\n\n", "\n&nbsp;\n").replace("\n", "<br />")
                 code = f'<div {self.style_data} class="code">{code}</div>'
                 placeholder = self.md.htmlStash.store(code)
-                text = f'{text[:m.start()]}\n{placeholder}\n{text[m.end():]}'
+                text = f"{text[:m.start()]}\n{placeholder}\n{text[m.end():]}"
             else:
                 break
 
@@ -78,5 +81,13 @@ class TlemCodeFencePreprocessor(Preprocessor):
 
 
 class TlemCodeFenceExtension(Extension):
+    def __init__(self, code_style: str | type[Style] = "monokai", **kwargs) -> None:
+        self.code_style = code_style
+        super().__init__(**kwargs)
+
     def extendMarkdown(self, md):
-        md.preprocessors.register(TlemCodeFencePreprocessor(md), "TlemCodeFencePreprocessor", 25)
+        md.preprocessors.register(
+            TlemCodeFencePreprocessor(md, self.code_style),
+            "TlemCodeFencePreprocessor",
+            25,
+        )
