@@ -39,9 +39,8 @@ class TlemTaskBlockProcessor(BlockProcessor):
 
                 # add text in block before tag as <p>
                 if pre_block:
-                    # we add the text directly to parent div
-                    # adding it in a <p> subelement caused weird formatting and empty <p> tags...
-                    self.parser.parseBlocks(parent, [pre_block])
+                    pr_e = etree.SubElement(parent, "p")
+                    pr_e.text = pre_block
                 # add tagged area
                 e = etree.SubElement(parent, "div")
                 e.set("style", self.style_data)
@@ -92,9 +91,8 @@ class TlemInfoBlockProcessor(BlockProcessor):
 
                 # add text in block before tag as <p>
                 if pre_block:
-                    # we add the text directly to parent div
-                    # adding it in a <p> subelement caused weird formatting and empty <p> tags...
-                    self.parser.parseBlocks(parent, [pre_block])
+                    pr_e = etree.SubElement(parent, "p")
+                    pr_e.text = pre_block
                 # add tagged area
                 e = etree.SubElement(parent, "div")
                 e.set("style", self.style_data)
