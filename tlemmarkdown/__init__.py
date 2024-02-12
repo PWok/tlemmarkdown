@@ -16,6 +16,7 @@ def main(source, output, *, source_encoding, output_encoding, code_style="monoka
                 extensions.TlemDel(),
                 extensions.TlemTask(),
                 extensions.TlemInfo(),
+                extensions.TlemImage(),
                 SmartyExtension(smart_ellipses=False, smart_quotes=False),
                 "sane_lists",
                 "nl2br",
