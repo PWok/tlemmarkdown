@@ -68,7 +68,7 @@ class TlemCodeFencePreprocessor(Preprocessor):
                     lexer = TextLexer()
                 code = highlight(m.group("code"), lexer, self.formatter)
                 code = code.replace("\n\n", "\n&nbsp;\n").replace("\n", "<br />")
-                code = f'\n\n<div {self.style_data} class="code">{code}</div>\n\n'
+                code = f'<div {self.style_data} class="code">{code}</div>'
                 placeholder = self.md.htmlStash.store(code)
                 text = f'{text[:m.start()]}\n{placeholder}\n{text[m.end():]}'
             else:

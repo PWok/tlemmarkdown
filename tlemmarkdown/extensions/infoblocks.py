@@ -13,8 +13,9 @@ INLINESTYLES = True
 
 class TlemCodeTaskBlockProcessor(BlockProcessor):
 
-    PATTERN_START = re.compile(r"""^\[[tT][aA][sS][kK]\][ ]*\n""", re.M)
-    PATTERN_END = re.compile(r"""\[/[tT][aA][sS][kK]\][ ]*$""", re.M)
+    PATTERN_START = re.compile(r"""^\[(?P<task>task)\][ ]*\n""", re.M|re.I)
+    RAW_PATTERN_END = r"""\[/{}\][ ]*$"""
+    #PATTERN_END = re.compile(, re.M)
 
     style_data = "background:#edd;border:1px solid #caa;padding:5px 10px;"
 
@@ -24,22 +25,31 @@ class TlemCodeTaskBlockProcessor(BlockProcessor):
     def run(self, parent, blocks):
         original_block = blocks[0]
         m = self.PATTERN_START.search(blocks[0])
-        pre_block = [f"{blocks[0][:m.start()]}"]
+        PATTERN_END = re.compile(self.RAW_PATTERN_END.format(m.group("task")), re.M)
+
+        pre_block = blocks[0][:m.start()].strip("\n")
         blocks[0] = f"{blocks[0][m.end():]}"
         # Find block with ending tag
         for block_num, block in enumerate(blocks):
-            if self.PATTERN_END.search(block):
+            if PATTERN_END.search(block):
                 # remove
-                blocks[block_num] = self.PATTERN_END.sub("", block)
-                # render tagged area inside a new div
-                pre_e = etree.SubElement(parent, "p")
-                self.parser.parseBlocks(pre_e, pre_block)
+                post_m = PATTERN_END.search(block)
+                blocks[block_num] = block[:post_m.start()]
+                post_block = block[post_m.end():]
+
+                # add text in block before tag as <p>
+                if pre_block:
+                    # we add the text directly to parent div
+                    # adding it in a <p> subelement caused weird formatting and empty <p> tags...
+                    self.parser.parseBlocks(parent, [pre_block])
+                # add tagged area
                 e = etree.SubElement(parent, "div")
                 e.set("style", self.style_data)
                 self.parser.parseBlocks(e, blocks[0 : block_num + 1])
-                # remove used blocks
-                for _ in range(0, block_num + 1):
+                # remove used blocks and add post_block as first block
+                for _ in range(0, block_num):
                     blocks.pop(0)
+                blocks[0] = post_block
                 return True
         blocks[0] = original_block
         return False

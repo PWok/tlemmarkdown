@@ -18,7 +18,7 @@ def main(source, output, *, source_encoding, output_encoding):
                 SmartyExtension(smart_ellipses=False, smart_quotes=False),
                 "sane_lists",
                 "nl2br",
-                "tables",
+                # "tables", # We don't REALLY use tables...
             ]
             with open(source, "r", encoding=source_encoding) as f:
                 # html = markdown.markdown(f.read())
