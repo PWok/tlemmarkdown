@@ -10,21 +10,23 @@ def main(source, output, *, source_encoding, output_encoding, code_style="monoka
         if source is None:
             html = input()
         else:
-            exts = [
-                extensions.TlemFence(code_style),
-                extensions.TlemUnderline(),
-                extensions.TlemDel(),
-                extensions.TlemTask(),
-                extensions.TlemInfo(),
-                extensions.TlemImage(),
-                SmartyExtension(smart_ellipses=False, smart_quotes=False),
-                "sane_lists",
-                "nl2br",
-                # "tables", # We don't REALLY use tables...
-            ]
             with open(source, "r", encoding=source_encoding) as f:
-                # html = markdown.markdown(f.read())
-                html = markdown.markdown(f.read(), extensions=exts)
+                html = f.read()
+
+        exts = [
+            extensions.TlemFence(code_style),
+            extensions.TlemUnderline(),
+            extensions.TlemDel(),
+            extensions.TlemTask(),
+            extensions.TlemInfo(),
+            extensions.TlemImage(),
+            SmartyExtension(smart_ellipses=False, smart_quotes=False),
+            "sane_lists",
+            "nl2br",
+            # "tables", # We don't REALLY use tables...
+        ]
+
+        html = markdown.markdown(html, extensions=exts)
 
         if output is None:
             print(html)
