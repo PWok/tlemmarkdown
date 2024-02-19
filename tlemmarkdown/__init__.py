@@ -5,7 +5,10 @@ from markdown.extensions.smarty import SmartyExtension
 from . import extensions
 
 
-def main(source, output, *, source_encoding, output_encoding, code_style="monokai"):
+def main(
+        source, output, *, source_encoding,
+        output_encoding, code_style="monokai", no_spoj=False
+    ):
     try:
         if source is None:
             html = input()
@@ -25,6 +28,10 @@ def main(source, output, *, source_encoding, output_encoding, code_style="monoka
             "nl2br",
             # "tables", # We don't REALLY use tables...
         ]
+
+        if not no_spoj:  # Who doesn't love double negation?
+            print("rfegd")
+            exts.append(extensions.TlemSpoj())
 
         html = markdown.markdown(html, extensions=exts)
 
