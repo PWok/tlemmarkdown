@@ -30,7 +30,6 @@ def main(
         ]
 
         if not no_spoj:  # Who doesn't love double negation?
-            print("rfegd")
             exts.append(extensions.TlemSpoj())
 
         html = markdown.markdown(html, extensions=exts)
